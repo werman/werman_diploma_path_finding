@@ -1,0 +1,246 @@
+\documentclass[a4paper,14pt]{extarticle}
+
+\pdfmapfile{pscyr.map}
+
+\usepackage[titletoc]{appendix}
+\usepackage{indentfirst}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphicx}
+\usepackage{sectsty}
+\usepackage{titlesec}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage{cleveref}
+\usepackage[tableposition=top]{caption}
+\usepackage{subcaption}
+\usepackage{chngcntr}
+\usepackage{float}
+\usepackage{textcase} 
+\usepackage{tocloft}
+\usepackage{listings}
+\usepackage{lastpage}
+\usepackage[figure,table,section]{totalcount}
+\usepackage[section]{placeins}
+\usepackage{pdfpages}
+\usepackage{cleveref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{geometry} % Меняем поля страницы
+\geometry{left=2cm}% левое поле
+\geometry{right=1.5cm}% правое поле
+\geometry{top=2cm}% верхнее поле
+\geometry{bottom=2cm}% нижнее поле
+
+\newcommand\myappendix[1]{
+
+\refstepcounter{section}
+
+\section*{Приложение~\thesection{}~#1}
+
+\addcontentsline{toc}{section}{~\thesection{}~#1}}
+
+% \renewcommand{\theenumi}{\arabic{enumi}}% Меняем везде перечисления на цифра.цифра
+% \renewcommand{\labelenumi}{\arabic{enumi}}% Меняем везде перечисления на цифра.цифра
+% \renewcommand{\theenumii}{.\arabic{enumii}}% Меняем везде перечисления на цифра.цифра
+% \renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}.}% Меняем везде перечисления на цифра.цифра
+% \renewcommand{\theenumiii}{.\arabic{enumiii}}% Меняем везде перечисления на цифра.цифра
+% \renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.}
+
+% Для списков
+% \renewcommand{\labelenumi}{-}
+% \renewcommand{\labelenumii}{\arabic{enumii})}
+% \renewcommand{\labelenumiii}{\arabic{enumii}.\arabic{enumiii})}
+
+\setlength\parindent{4ex}
+
+\makeatletter
+\AddEnumerateCounter{\asbuk}{\russian@alph}{щ}
+\makeatother
+
+% Отступы для списков.
+%\setenumerate[1]{label=\asbuk*), ref=\asbuk*, fullwidth, itemindent=\parindent, leftmargin=0\parindent, topsep=0pt}
+
+\setenumerate[1]{label=-, fullwidth, itemindent=\parindent, leftmargin=0\parindent, topsep=0pt}
+
+\setenumerate[2]{label=\arabic{enumii}), fullwidth, itemindent=1\parindent, leftmargin=1\parindent}
+
+\setenumerate[3]{label=\arabic{enumii}.\arabic{enumiii}), fullwidth, itemindent=1\parindent, leftmargin=1\parindent}
+
+% Межстрочный интервал
+\renewcommand{\baselinestretch}{1.25}
+
+\sloppy
+
+%Частота переносов
+\hyphenpenalty=2000
+
+%Висячие строки
+\clubpenalty=10000
+\widowpenalty=10000
+
+% Нумерация страниц сверху
+\pagestyle{myheadings}
+
+%Точки в содержании
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+\linespread{1.3}
+\frenchspacing
+
+\newlength{\normalparindent}
+\AtBeginDocument{\setlength{\normalparindent}{\parindent}}
+
+\titlespacing*{\chapter}
+  {0pt}{0ex}{1\baselineskip}
+\titlespacing*{\section}
+  {0pt}{0ex}{1\baselineskip}
+\titlespacing*{\subsection}
+  {0pt}{2\baselineskip}{2\baselineskip}
+% \titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+% \titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+% \titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+
+% 
+\titleformat{\chapter}[block]
+  {\bfseries\centering}
+  {\hspace*{\normalparindent}\thechapter}
+  {1ex}
+  {}
+
+\titleformat{\section}[block]
+  {\bfseries\centering}
+  {\hspace*{\normalparindent}\thesection}
+  {1ex}
+  {}
+
+\titleformat{\subsection}[block]
+  {\bfseries}
+  {\hspace*{\normalparindent}\thesubsection}
+  {1ex}
+  {}
+  
+\titleformat{\subsubsection}[block]
+  {\bfseries}
+  {\hspace*{\normalparindent}\thesubsubsection}
+  {1ex}
+  {}
+ 
+
+% 
+\allsectionsfont{\normalsize}
+
+ 
+\DeclareCaptionLabelFormat{gostfigure}{Рисунок #2}
+\DeclareCaptionLabelFormat{gosttable}{Рисунок #2}
+\DeclareCaptionLabelSeparator{gost}{~---~}
+\captionsetup{labelsep=gost}
+\captionsetup[figure]{labelformat=gostfigure}
+\captionsetup[table]{labelformat=gosttable}
+\renewcommand{\thesubfigure}{\asbuk{subfigure}}
+
+\newcommand{\crefrangeconjunction}{-}
+\crefname{table}{см. рис.}{см. рис.}
+
+%For counting
+\counterwithin{figure}{section}
+\counterwithin{table}{section}
+
+\newcommand{\addimg}[4]{
+\begin{figure}[!htb]
+    \centering
+    \includegraphics[scale=#2]{#1}
+    \caption{#3}
+    \label{fig:#4}
+\end{figure}
+}
+
+\crefformat{figure}{см. рис. #1}
+\crefformat{table}{см. рис. #1}
+
+\lstset{ 
+    basicstyle=\footnotesize,
+    breaklines=true
+}
+
+% Перевод данных об алгоритмах
+\renewcommand{\listalgorithmname}{Список алгоритмов}
+\floatname{algorithm}{Алгоритм}
+
+% Перевод команд псевдокода
+\algrenewcommand\algorithmicwhile{\textbf{До тех пока}}
+\algrenewcommand\algorithmicdo{\textbf{выполнять}}
+\algrenewcommand\algorithmicrepeat{\textbf{Повторять}}
+\algrenewcommand\algorithmicuntil{\textbf{Пока выполняется}}
+\algrenewcommand\algorithmicend{\textbf{Конец}}
+\algrenewcommand\algorithmicif{\textbf{Если}}
+\algrenewcommand\algorithmicelse{\textbf{Иначе}}
+\algrenewcommand\algorithmicthen{\textbf{тогда}}
+\algrenewcommand\algorithmicfor{\textbf{Цикл}}
+\algrenewcommand\algorithmicforall{\textbf{Выполнить для всех}}
+\algrenewcommand\algorithmicfunction{\textbf{Функция}}
+\algrenewcommand\algorithmicprocedure{\textbf{Процедура}}
+\algrenewcommand\algorithmicloop{\textbf{Зациклить}}
+\algrenewcommand\algorithmicrequire{\textbf{Условия:}}
+\algrenewcommand\algorithmicensure{\textbf{Обеспечивающие условия:}}
+\algrenewcommand\algorithmicreturn{\textbf{Возвратить}}
+\algrenewtext{EndWhile}{\textbf{Конец цикла}}
+\algrenewtext{EndLoop}{\textbf{Конец зацикливания}}
+\algrenewtext{EndFor}{\textbf{Конец цикла}}
+\algrenewtext{EndFunction}{\textbf{Конец функции}}
+\algrenewtext{EndProcedure}{\textbf{Конец процедуры}}
+\algrenewtext{EndIf}{\textbf{Конец условия}}
+\algrenewtext{EndFor}{\textbf{Конец цикла}}
+\algrenewtext{BeginAlgorithm}{\textbf{Начало алгоритма}}
+\algrenewtext{EndAlgorithm}{\textbf{Конец алгоритма}}
+\algrenewtext{BeginBlock}{\textbf{Начало блока. }}
+\algrenewtext{EndBlock}{\textbf{Конец блока}}
+\algrenewtext{ElsIf}{\textbf{Иначе если }}
+
+\begin{document}
+%
+%%\input{content/title}
+%
+%\includepdf[pages=1-3]{resources/title.pdf}
+%
+\input{content/abstract}
+
+\clearpage
+
+\input{content/content}
+
+\clearpage
+
+\input{content/introduction}
+
+\clearpage
+
+\input{content/analysis}
+
+\clearpage
+
+\input{content/engineering}
+
+\clearpage
+
+\input{content/implementation}
+
+\clearpage
+
+\input{content/testing}
+
+\clearpage
+
+\input{content/conclusion}
+
+\clearpage
+
+\input{content/references}
+
+\clearpage
+
+\input{content/appendix}
+
+
+\end{document}
