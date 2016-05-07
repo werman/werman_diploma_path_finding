@@ -198,6 +198,28 @@
 \algrenewtext{EndBlock}{\textbf{Конец блока}}
 \algrenewtext{ElsIf}{\textbf{Иначе если }}
 
+
+\makeatletter
+\renewenvironment{thebibliography}[1]
+{\list{\@arabic\c@enumiv.}%
+    {\settowidth\labelwidth{\@biblabel{#1}}%
+        \leftmargin=0pt
+        \itemindent=2\parindent
+        \@openbib@code
+        \usecounter{enumiv}%
+        \let\p@enumiv\@empty
+        \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+    \sloppy
+    \clubpenalty4000
+    \@clubpenalty \clubpenalty
+    \widowpenalty4000%
+    \sfcode`\.\@m}
+{\def\@noitemerr
+    {\@latex@warning{Empty `thebibliography' environment}}%
+    \endlist}
+\makeatother
+
+
 \begin{document}
 %
 %%\input{content/title}
@@ -209,7 +231,7 @@
 \clearpage
 
 \input{content/content}
-
+    
 \clearpage
 
 \input{content/introduction}
@@ -225,6 +247,10 @@
 \clearpage
 
 \input{content/implementation}
+
+\clearpage
+
+\input{content/results_analysis}
 
 \clearpage
 
