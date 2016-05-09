@@ -8,7 +8,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage{graphicx}
-\usepackage{sectsty}
 \usepackage{titlesec}
 \usepackage{enumerate}
 \usepackage{enumitem}
@@ -26,7 +25,6 @@
 \usepackage{pdfpages}
 \usepackage{cleveref}
 \usepackage{algorithm}
-\usepackage{algpseudocode}
 \usepackage{geometry} % Меняем поля страницы
 \geometry{left=2cm}% левое поле
 \geometry{right=1.5cm}% правое поле
@@ -129,7 +127,7 @@
  
 
 % 
-\allsectionsfont{\normalsize}
+%\allsectionsfont{\normalsize}
 
  
 \DeclareCaptionLabelFormat{gostfigure}{Рисунок #2}
@@ -146,6 +144,8 @@
 %For counting
 \counterwithin{figure}{section}
 \counterwithin{table}{section}
+
+\graphicspath{ {img/} }
 
 \newcommand{\addimg}[4]{
 \begin{figure}[!htb]
@@ -164,47 +164,49 @@
     breaklines=true
 }
 
-% Перевод данных об алгоритмах
-\renewcommand{\listalgorithmname}{Список алгоритмов}
-\floatname{algorithm}{Алгоритм}
-
-% Перевод команд псевдокода
-\algrenewcommand\algorithmicwhile{\textbf{До тех пока}}
-\algrenewcommand\algorithmicdo{\textbf{выполнять}}
-\algrenewcommand\algorithmicrepeat{\textbf{Повторять}}
-\algrenewcommand\algorithmicuntil{\textbf{Пока выполняется}}
-\algrenewcommand\algorithmicend{\textbf{Конец}}
-\algrenewcommand\algorithmicif{\textbf{Если}}
-\algrenewcommand\algorithmicelse{\textbf{Иначе}}
-\algrenewcommand\algorithmicthen{\textbf{тогда}}
-\algrenewcommand\algorithmicfor{\textbf{Цикл}}
-\algrenewcommand\algorithmicforall{\textbf{Выполнить для всех}}
-\algrenewcommand\algorithmicfunction{\textbf{Функция}}
-\algrenewcommand\algorithmicprocedure{\textbf{Процедура}}
-\algrenewcommand\algorithmicloop{\textbf{Зациклить}}
-\algrenewcommand\algorithmicrequire{\textbf{Условия:}}
-\algrenewcommand\algorithmicensure{\textbf{Обеспечивающие условия:}}
-\algrenewcommand\algorithmicreturn{\textbf{Возвратить}}
-\algrenewtext{EndWhile}{\textbf{Конец цикла}}
-\algrenewtext{EndLoop}{\textbf{Конец зацикливания}}
-\algrenewtext{EndFor}{\textbf{Конец цикла}}
-\algrenewtext{EndFunction}{\textbf{Конец функции}}
-\algrenewtext{EndProcedure}{\textbf{Конец процедуры}}
-\algrenewtext{EndIf}{\textbf{Конец условия}}
-\algrenewtext{EndFor}{\textbf{Конец цикла}}
-\algrenewtext{BeginAlgorithm}{\textbf{Начало алгоритма}}
-\algrenewtext{EndAlgorithm}{\textbf{Конец алгоритма}}
-\algrenewtext{BeginBlock}{\textbf{Начало блока. }}
-\algrenewtext{EndBlock}{\textbf{Конец блока}}
-\algrenewtext{ElsIf}{\textbf{Иначе если }}
+%% Перевод данных об алгоритмах
+%\renewcommand{\listalgorithmname}{Список алгоритмов}
+%\floatname{algorithm}{Алгоритм}
+%
+%% Перевод команд псевдокода
+%\algrenewcommand\algorithmicwhile{\textbf{До тех пока}}
+%\algrenewcommand\algorithmicdo{\textbf{выполнять}}
+%\algrenewcommand\algorithmicrepeat{\textbf{Повторять}}
+%\algrenewcommand\algorithmicuntil{\textbf{Пока выполняется}}
+%\algrenewcommand\algorithmicend{\textbf{Конец}}
+%\algrenewcommand\algorithmicif{\textbf{Если}}
+%\algrenewcommand\algorithmicelse{\textbf{Иначе}}
+%\algrenewcommand\algorithmicthen{\textbf{тогда}}
+%\algrenewcommand\algorithmicfor{\textbf{Цикл}}
+%\algrenewcommand\algorithmicforall{\textbf{Выполнить для всех}}
+%\algrenewcommand\algorithmicfunction{\textbf{Функция}}
+%\algrenewcommand\algorithmicprocedure{\textbf{Процедура}}
+%\algrenewcommand\algorithmicloop{\textbf{Зациклить}}
+%\algrenewcommand\algorithmicrequire{\textbf{Условия:}}
+%\algrenewcommand\algorithmicensure{\textbf{Обеспечивающие условия:}}
+%\algrenewcommand\algorithmicreturn{\textbf{Возвратить}}
+%\algrenewtext{EndWhile}{\textbf{Конец цикла}}
+%\algrenewtext{EndLoop}{\textbf{Конец зацикливания}}
+%\algrenewtext{EndFor}{\textbf{Конец цикла}}
+%\algrenewtext{EndFunction}{\textbf{Конец функции}}
+%\algrenewtext{EndProcedure}{\textbf{Конец процедуры}}
+%\algrenewtext{EndIf}{\textbf{Конец условия}}
+%\algrenewtext{EndFor}{\textbf{Конец цикла}}
+%\algrenewtext{BeginAlgorithm}{\textbf{Начало алгоритма}}
+%\algrenewtext{EndAlgorithm}{\textbf{Конец алгоритма}}
+%\algrenewtext{BeginBlock}{\textbf{Начало блока. }}
+%\algrenewtext{EndBlock}{\textbf{Конец блока}}
+%\algrenewtext{ElsIf}{\textbf{Иначе если }}
 
 
 \makeatletter
 \renewenvironment{thebibliography}[1]
 {\list{\@arabic\c@enumiv.}%
     {\settowidth\labelwidth{\@biblabel{#1}}%
+    	\topsep=0pt
         \leftmargin=0pt
         \itemindent=2\parindent
+        \itemsep=0pt
         \@openbib@code
         \usecounter{enumiv}%
         \let\p@enumiv\@empty
@@ -219,6 +221,26 @@
     \endlist}
 \makeatother
 
+\newcounter{mycite}
+\newtoks\citetoks
+\makeatletter
+\DeclareRobustCommand\unscite[1]{%
+	\@ifundefined{uns@cite#1}
+	{\refstepcounter{mycite}\label{citelabel@#1}%
+		\expandafter\xdef\csname uns@cite#1\endcsname{\arabic{mycite}}%
+		\toks\z@=\expandafter{\the\citetoks}%
+		\toks\tw@=\expandafter\expandafter\expandafter{%
+			\csname uns@bibitem#1\endcsname}%
+		\edef\@tempcite{\the\toks\z@\the\toks\tw@}%
+		\global\citetoks=\expandafter{\@tempcite}%
+	}{}[\@nameuse{uns@cite#1}]}
+\newcommand{\orderedbibitem}[2]{%
+	\@namedef{uns@bibitem#1}{\bibitem{#1}#2}}
+\makeatother
+
+\renewcommand{\cite}{\unscite}
+
+\input{references_list}
 
 \begin{document}
 %
@@ -244,17 +266,17 @@
 
 \input{content/engineering}
 
-\clearpage
+%\clearpage
+%
+%\input{content/implementation}
 
-\input{content/implementation}
+%\clearpage
+%
+%\input{content/results_analysis}
 
-\clearpage
-
-\input{content/results_analysis}
-
-\clearpage
-
-\input{content/testing}
+%\clearpage
+%
+%\input{content/testing}
 
 \clearpage
 
@@ -264,9 +286,9 @@
 
 \input{content/references}
 
-\clearpage
-
-\input{content/appendix}
+%\clearpage
+%
+%\input{content/appendix}
 
 
 \end{document}
