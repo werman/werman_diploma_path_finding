@@ -1,4 +1,4 @@
-\documentclass[a4paper,14pt]{extarticle}
+\documentclass[a4paper,12pt]{extarticle}
 
 \pdfmapfile{pscyr.map}
 
@@ -26,7 +26,7 @@
 \usepackage{cleveref}
 \usepackage{algorithm}
 \usepackage{geometry} % Меняем поля страницы
-\geometry{left=2cm}% левое поле
+\geometry{left=3cm}% левое поле
 \geometry{right=1.5cm}% правое поле
 \geometry{top=2cm}% верхнее поле
 \geometry{bottom=2cm}% нижнее поле
@@ -51,7 +51,7 @@
 % \renewcommand{\labelenumii}{\arabic{enumii})}
 % \renewcommand{\labelenumiii}{\arabic{enumii}.\arabic{enumiii})}
 
-\setlength\parindent{4ex}
+\setlength\parindent{1.27cm}
 
 \makeatletter
 \AddEnumerateCounter{\asbuk}{\russian@alph}{щ}
@@ -95,6 +95,8 @@
 \titlespacing*{\section}
   {0pt}{0ex}{1\baselineskip}
 \titlespacing*{\subsection}
+  {0pt}{2\baselineskip}{2\baselineskip}
+  \titlespacing*{\subsubsection}
   {0pt}{2\baselineskip}{2\baselineskip}
 % \titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 % \titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
@@ -205,7 +207,7 @@
     {\settowidth\labelwidth{\@biblabel{#1}}%
     	\topsep=0pt
         \leftmargin=0pt
-        \itemindent=2\parindent
+        \itemindent=1.5\parindent	% Костыль
         \itemsep=0pt
         \@openbib@code
         \usecounter{enumiv}%

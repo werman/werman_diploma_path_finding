@@ -2,6 +2,8 @@
 
 \thispagestyle{empty}
 
+
+
 \setlength{\cftbeforesecskip}{0pt}
 \renewcommand{\cftsecpagefont}{\normalfont}
 
@@ -12,10 +14,14 @@
 
 \renewcommand{\cftparskip}{-1mm}
 \renewcommand{\cftdotsep}{1}
-\setcounter{tocdepth}{2} 
+\setcounter{tocdepth}{3} 
 \renewcommand*\contentsname{}
-\thispagestyle{empty}
 
+\cftsetindents{section}{-1\parindent}{1em}
+\cftsetindents{subsection}{-0.5\parindent}{2em}
+\cftsetindents{subsubsection}{-0.2\parindent}{3em}
+
+\thispagestyle{empty}
 \tableofcontents
 
 \thispagestyle{empty}
