@@ -30,26 +30,295 @@
 
 \begin{enumerate}
     \item клетка из который мы пришли может быть проигнорирована;
-    \item клетки по диагонали позади рассматриваемой, мы тоже может игнорировать, так как они были достигнуты из родительской клетки;
-    \item клетки выше и ниже рассматриваемой могут быть достигнуты оптимальнее из её родителя;
+    \item клетки по диагонали позади рассматриваемой, мы тоже можем игнорировать, так как они были достигнуты из родительской клетки \cref{fig:jps_cells_ignored_behind};
+    \item клетки выше и ниже рассматриваемой могут быть достигнуты оптимальнее из её родителя \cref{fig:jps_cells_ignored_up_down};
     \item клетки правее и выше/ниже рассматриваемой могут быть достигнуты оптимальнее из клеток на одну левее;
 \end{enumerate}
 
-Эти допущения приводят к тому что алгоритм должен рассматривать только клетки правее от текущий пока путь не содержит препятствий. Однако путь не всегда свободен от препятствий, что ломает приведённой допущение. Это происходит в том случае, когда клетка сверху или снизу рассматриваемой является препятствием, что делает утверждение о том, что оптимальный путь до диагональной клетки не проходит через рассматриваемую. В такой ситуации прыжок останавливается и клетка по диагонали (такая клетка называется вынужденным соседом) и текущая клетка добавляются в открытый список для дальнейшего рассмотрения. 
+\addtikz{Отброшенные клетки сзади}{jps_cells_ignored_behind}
+{
+\mybox[x=1,y=0,color=grey]
+\mybox[x=1,y=1,color=grey]
+\mybox[x=1,y=2,color=grey]
+\mybox[x=2,y=1,color=green]
 
-Последним допущением является то, что если при прыжке препятствие блокирует продвижение в заданном направлении - весь прыжок может быть отброшен.
+\mygrid[width=6, height=3]
 
-Такие же правила и допущения верны для диагональных прыжков. Рассмотрим прыжок вправо вверх по диагонали, можно предположить, что клетки снизу, снизу справа, слева и слева сверху можно оптимально достичь через родителя рассматриваемой клетки. В следствии  чего остаётся рассмотреть три клетки: сверху, справа и по диагонали. В отличии от горизонтального и вертикального прыжка в данном случае осталось три клетки для рассмотрения, однако для двух из них требуется вертикальный и горизонтальный прыжок. Так как требуемые прыжки уже определены - вначале происходят они, затем если в результате прыжков не было найдено клеток для дальнейшего рассмотрения - происходит прыжок по диагонали на одну клетку и процесс повторяется.
+\myarrow[startx=0,starty=1,endx=1,endy=1,color=darkgrey]
+\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+\myarrow[startx=1,starty=1,endx=1,endy=2,color=blue]
+\myarrow[startx=1,starty=1,endx=1,endy=0,color=blue]
+}
+
+\addtikz{Отброшенные клетки сверху и снизу}{jps_cells_ignored_up_down}
+{
+	\mybox[x=1,y=0,color=grey]
+	\mybox[x=1,y=1,color=grey]
+	\mybox[x=1,y=2,color=grey]
+	\mybox[x=2,y=0,color=grey]
+	\mybox[x=2,y=2,color=grey]
+	\mybox[x=2,y=1,color=green]
+	
+	\mygrid[width=6, height=3]
+	
+	\myarrow[startx=0,starty=1,endx=1,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=0,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=2,color=blue]
+	\myarrow[startx=1,starty=1,endx=2,endy=0,color=blue]
+}
+
+Эти допущения приводят к тому что алгоритм должен рассматривать только клетки правее от текущий пока путь не содержит препятствий \cref{fig:jps_forward_move}. Однако путь не всегда свободен от препятствий, что ломает приведённой допущение. Это происходит в том случае, когда клетка сверху или снизу рассматриваемой является препятствием, что делает утверждение о том, что оптимальный путь до диагональной клетки не проходит через рассматриваемую \cref{fig:jps_horizontal_forced_neighbour}. В такой ситуации прыжок останавливается и клетка по диагонали (такая клетка называется вынужденным соседом) и текущая клетка добавляются в открытый список для дальнейшего рассмотрения. 
+
+Последним допущением является то, что если при прыжке препятствие блокирует продвижение в заданном направлении - весь прыжок может быть отброшен \cref{fig:jps_forward_move_blocked}.
+
+\addtikz{Отброшенные клетки сверху и снизу}{jps_forward_move}
+{
+	\mybox[x=1,y=0,color=grey]
+	\mybox[x=1,y=1,color=grey]
+	\mybox[x=1,y=2,color=grey]
+	\mybox[x=2,y=0,color=grey]
+	\mybox[x=2,y=2,color=grey]
+	\mybox[x=2,y=0,color=grey]
+	\mybox[x=2,y=2,color=grey]
+	\mybox[x=3,y=0,color=grey]
+	\mybox[x=3,y=2,color=grey]
+	\mybox[x=4,y=0,color=grey]
+	\mybox[x=4,y=2,color=grey]
+	\mybox[x=2,y=1,color=green]
+	
+	\mygrid[width=6, height=3]
+	
+	\myarrow[startx=0,starty=1,endx=1,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=0,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=0,color=darkgrey]
+	\myarrow[startx=2,starty=0,endx=3,endy=0,color=darkgrey]
+	\myarrow[startx=2,starty=2,endx=3,endy=2,color=darkgrey]
+	\myarrow[startx=3,starty=0,endx=4,endy=0,color=darkgrey]
+	\myarrow[startx=3,starty=2,endx=4,endy=2,color=darkgrey]
+	\myarrow[startx=2,starty=1,endx=3,endy=1,color=blue]
+	\myarrow[startx=3,starty=1,endx=4,endy=1,color=blue]
+}
+
+\addtikz{Вынужденный сосед}{jps_horizontal_forced_neighbour}
+{
+	\begin{scope}[]
+		\matrix[column sep=1cm, ampersand replacement=\&]{
+			\mybox[x=1,y=0,color=grey]
+			\mybox[x=1,y=1,color=grey]
+			\mybox[x=1,y=2,color=grey]
+			\mybox[x=2,y=0,color=grey]
+			\mybox[x=2,y=2,color=black]
+			\mybox[x=3,y=2,color=red]
+			\mybox[x=3,y=0,color=grey]
+			\mybox[x=2,y=1,color=green]
+			
+			\mygrid[width=6, height=3]
+			
+			\myarrow[startx=0,starty=1,endx=1,endy=1,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=1,endy=0,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=2,endy=2,color=red]
+			\myarrow[startx=1,starty=1,endx=2,endy=0,color=darkgrey]
+			\myarrow[startx=2,starty=0,endx=3,endy=0,color=darkgrey]
+			\myarrow[startx=2,starty=1,endx=3,endy=2,color=blue]
+			\myarrow[startx=2,starty=1,endx=3,endy=1,color=blue];
+			
+			\&
+			
+			\mybox[x=1,y=0,color=grey]
+			\mybox[x=1,y=1,color=grey]
+			\mybox[x=1,y=2,color=grey]
+			\mybox[x=2,y=0,color=black]
+			\mybox[x=2,y=2,color=grey]
+			\mybox[x=3,y=2,color=grey]
+			\mybox[x=3,y=0,color=red]
+			\mybox[x=2,y=1,color=green]
+			
+			\mygrid[width=6, height=3]
+			
+			\myarrow[startx=0,starty=1,endx=1,endy=1,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=1,endy=0,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+			\myarrow[startx=2,starty=2,endx=3,endy=2,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=2,endy=0,color=red]
+			\myarrow[startx=2,starty=1,endx=3,endy=0,color=blue]
+			\myarrow[startx=2,starty=1,endx=3,endy=1,color=blue];
+			\\
+		};
+	\end{scope}
+}
+
+\addtikz{Заблокированный путь}{jps_forward_move_blocked}
+{
+	\mybox[x=1,y=0,color=grey]
+	\mybox[x=1,y=1,color=grey]
+	\mybox[x=1,y=2,color=grey]
+	\mybox[x=2,y=0,color=grey]
+	\mybox[x=2,y=2,color=grey]
+	\mybox[x=2,y=0,color=grey]
+	\mybox[x=2,y=2,color=grey]
+	\mybox[x=3,y=0,color=grey]
+	\mybox[x=3,y=2,color=grey]
+	\mybox[x=4,y=0,color=grey]
+	\mybox[x=4,y=2,color=grey]
+	\mybox[x=2,y=1,color=green]
+	\mybox[x=5,y=1,color=black]
+		
+	\mygrid[width=6, height=3]
+	
+	\myarrow[startx=0,starty=1,endx=1,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=0,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=0,color=darkgrey]
+	\myarrow[startx=2,starty=0,endx=3,endy=0,color=darkgrey]
+	\myarrow[startx=2,starty=2,endx=3,endy=2,color=darkgrey]
+	\myarrow[startx=3,starty=0,endx=4,endy=0,color=darkgrey]
+	\myarrow[startx=3,starty=2,endx=4,endy=2,color=darkgrey]
+	\myarrow[startx=2,starty=1,endx=3,endy=1,color=blue]
+	\myarrow[startx=3,starty=1,endx=4,endy=1,color=blue]
+}
+
+Такие же правила и допущения верны для диагональных прыжков. Рассмотрим прыжок вправо вверх по диагонали, можно предположить, что клетки снизу, снизу справа, слева и слева сверху можно оптимально достичь через родителя рассматриваемой клетки. В следствии  чего остаётся рассмотреть три клетки: сверху, справа и по диагонали \cref{fig:jps_diagonal_jump}. В отличии от горизонтального и вертикального прыжка в данном случае осталось три клетки для рассмотрения, однако для двух из них требуется вертикальный и горизонтальный прыжок. Так как требуемые прыжки уже определены - вначале происходят они, затем если в результате прыжков не было найдено клеток для дальнейшего рассмотрения - происходит прыжок по диагонали на одну клетку и процесс повторяется.
+
+\addtikz{Прыжок по диагонали}{jps_diagonal_jump}
+{
+	\mybox[x=1,y=1,color=grey]
+	\mybox[x=1,y=2,color=grey]
+	\mybox[x=1,y=3,color=grey]
+	\mybox[x=2,y=1,color=grey]
+	\mybox[x=3,y=1,color=grey]
+	\mybox[x=2,y=2,color=green]
+	
+	\mygrid[width=5, height=5]
+	
+	\myarrow[startx=0,starty=0,endx=1,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=2,endx=1,endy=3,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+	\myarrow[startx=2,starty=1,endx=3,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+	\myarrow[startx=2,starty=2,endx=2,endy=3,color=blue]
+	\myarrow[startx=2,starty=2,endx=3,endy=2,color=blue]
+	\myarrow[startx=2,starty=2,endx=3,endy=3,color=blue]
+}
+
+По аналогии с горизонтальным и вертикальным прыжком при диагональном прыжке так же встречаются вынужденные соседи, когда слева или под текущей клеткой находится препятствие, клетка слева вверху или справа внизу соответственно являются вынужденными соседями \cref{fig:jps_diagonal_jump_forced_neighbour}. 
+
+\addtikz{Вынужденный сосед при диагональном прыжке}{jps_diagonal_jump_forced_neighbour}
+{
+	\begin{scope}[]
+		\matrix[column sep=1cm, ampersand replacement=\&]{
+			% % % % % % % % % %
+			\mybox[x=1,y=1,color=grey]
+			\mybox[x=1,y=2,color=grey]
+			\mybox[x=1,y=3,color=grey]
+			\mybox[x=2,y=1,color=black]
+			\mybox[x=3,y=1,color=red]
+			\mybox[x=2,y=2,color=green]
+			
+			\mygrid[width=5, height=5]
+			
+			\myarrow[startx=0,starty=0,endx=1,endy=1,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+			\myarrow[startx=1,starty=2,endx=1,endy=3,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=2,endy=1,color=red]
+			\myarrow[startx=2,starty=2,endx=3,endy=1,color=blue]
+			\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+			\myarrow[startx=2,starty=2,endx=2,endy=3,color=blue]
+			\myarrow[startx=2,starty=2,endx=3,endy=2,color=blue]
+			\myarrow[startx=2,starty=2,endx=3,endy=3,color=blue]; 
+			
+			\& % % % % % % % %
+			
+			\mybox[x=1,y=1,color=grey]
+			\mybox[x=1,y=2,color=black]
+			\mybox[x=1,y=3,color=red]
+			\mybox[x=2,y=1,color=grey]
+			\mybox[x=3,y=1,color=grey]
+			\mybox[x=2,y=2,color=green]
+			
+			\mygrid[width=5, height=5]
+			
+			\myarrow[startx=0,starty=0,endx=1,endy=1,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=1,endy=2,color=red]
+			\myarrow[startx=2,starty=2,endx=1,endy=3,color=blue]
+			\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+			\myarrow[startx=2,starty=1,endx=3,endy=1,color=darkgrey]
+			\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+			\myarrow[startx=2,starty=2,endx=2,endy=3,color=blue]
+			\myarrow[startx=2,starty=2,endx=3,endy=2,color=blue]
+			\myarrow[startx=2,starty=2,endx=3,endy=3,color=blue]; 
+			\\
+	};
+	\end{scope}
+}
 
 Когда прыжок закончен берётся клетка с наименьшим весом из открытого списка и из неё происходит прыжок в направлении в котором алгоритм пришёл в неё.
 
 JPS начинается с того, что из начальной точки происходят прыжки во все восемь сторон. Затем выполняется цикл по открытому списку и если в нём существует клетка, то из неё происходит вертикальный и горизонтальный прыжок, затем выполняется проверка не допускающая прохождение между двумя непроходимыми клетками. После чего запускается диагональный прыжок. 
 
-Диагональный прыжок происходит пока следующая клетка проходима, не является конечной клеткой и находится на карте. Пусть текущая клетка имеет координаты ${(x_c, y_c)}$, а направлением прыжка является пара дельт ${(d_x, d_y)}$ принимающих значения ${d_x, d_y \in \{-1, 0, 1\}}$. Сперва рассматривается соседняя клетка ${(x_c, y_c+d_y)}$ и если она проходима и соседняя  ${(x_c-d_x, y_c)}$ не проходима, а клетка с координатами ${(x_c-d_x, y_c+d_y)}$ проходима (путь не заблокирован), то текущая клетка проверяется на возможность добавления в открытый список. Такая же проверка происходит с тройкой точек ${\{(x_c+d_x), (x_c, y_c-d_y), (x_c+d_x, y_c-d_y)\}}$ соответственно. Если прыжок вперёд заблокирован двумя клетками по горизонтали и вертикали ${\{(x_c, y_c+d_y), (x_c+d_x, y_c)\}}$, то прыжок прекращается, иначе проводится горизонтальный и вертикальный прыжок и если хотя бы один из них нашёл клетку для дальнейшего рассмотрения, то текущая клетка добавляется в открытый список.
+Диагональный прыжок происходит пока следующая клетка проходима, не является конечной клеткой и находится на карте. Пусть текущая клетка имеет координаты ${(x_c, y_c)}$, а направлением прыжка является пара дельт ${(d_x, d_y)}$ принимающих значения ${d_x, d_y \in \{-1, 0, 1\}}$. Сперва рассматривается соседняя клетка ${(x_c, y_c+d_y)}$ и если она проходима и соседняя  ${(x_c-d_x, y_c)}$ не проходима, а клетка с координатами ${(x_c-d_x, y_c+d_y)}$ проходима (путь не заблокирован \cref{fig:jps_diagonal_jump_blocked_forced_neighbour}), то текущая клетка проверяется на возможность добавления в открытый список. Такая же проверка происходит с тройкой точек ${\{(x_c+d_x), (x_c, y_c-d_y), (x_c+d_x, y_c-d_y)\}}$ соответственно. Если прыжок вперёд заблокирован двумя клетками по горизонтали и вертикали ${\{(x_c, y_c+d_y), (x_c+d_x, y_c)\}}$ \cref{fig:jps_blocked_diagonal_jump}, то прыжок прекращается, иначе проводится горизонтальный и вертикальный прыжок и если хотя бы один из них нашёл клетку для дальнейшего рассмотрения, то текущая клетка добавляется в открытый список, при этом такие прыжки в стороны не добавляют клетки в открытый список.
   
-Горизонтальный и вертикальный прыжки происходят пока следующая клетка проходима, не является конечной клеткой и находится на карте. На каждом шаге происходит проверка на наличие вынужденных соседей и если такой сосед найден, то он добавлется в октрытый список и метод прерывается. 
+\addtikz{Заблокированный вынужденный сосед}{jps_diagonal_jump_blocked_forced_neighbour}
+{
+	\mybox[x=1,y=1,color=grey]
+	\mybox[x=1,y=2,color=grey]
+	\mybox[x=1,y=3,color=grey]
+	\mybox[x=2,y=1,color=black]
+	\mybox[x=3,y=2,color=black]
+	\mybox[x=3,y=1,color=yellow]
+	\mybox[x=2,y=2,color=green]
+	
+	\mygrid[width=5, height=5]
+	
+	\myarrow[startx=0,starty=0,endx=1,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=2,endx=1,endy=3,color=darkgrey]
+	\myarrow[startx=2,starty=2,endx=2,endy=3,color=blue]
+	\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+	\myarrow[startx=2,starty=2,endx=3,endy=2,color=red]
+	\myarrow[startx=2,starty=2,endx=3,endy=1,color=red]
+	\myarrow[startx=2,starty=2,endx=3,endy=3,color=blue]
+}
+  
+\addtikz{Заблокированный прыжок по диагонали}{jps_blocked_diagonal_jump}
+{
+	\mybox[x=1,y=1,color=grey]
+	\mybox[x=1,y=2,color=grey]
+	\mybox[x=1,y=3,color=grey]
+	\mybox[x=2,y=1,color=grey]
+	\mybox[x=3,y=1,color=grey]
+	\mybox[x=3,y=1,color=grey]
+	\mybox[x=2,y=3,color=black]
+	\mybox[x=3,y=2,color=black]
+	\mybox[x=2,y=2,color=green]
+	
+	\mygrid[width=5, height=5]
+	
+	\myarrow[startx=0,starty=0,endx=1,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=1,endy=2,color=darkgrey]
+	\myarrow[startx=1,starty=2,endx=1,endy=3,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=1,color=darkgrey]
+	\myarrow[startx=2,starty=1,endx=3,endy=1,color=darkgrey]
+	\myarrow[startx=1,starty=1,endx=2,endy=2,color=darkgrey]
+	\myarrow[startx=2,starty=2,endx=2,endy=3,color=red]
+	\myarrow[startx=2,starty=2,endx=3,endy=2,color=red]
+	\myarrow[startx=2,starty=2,endx=3,endy=3,color=red]
+}
+  
+Горизонтальный и вертикальный прыжки происходят пока следующая клетка проходима, не является конечной клеткой и находится на карте. На каждом шаге происходит проверка на наличие вынужденных соседей и если такой сосед найден, то он добавляется в открытый список и метод прерывается. 
 
-Когда открытый список иcчерпан - происходит восстановление пути так же как и в A*.
+Когда открытый список исчерпан - происходит восстановление пути так же как и в A*.
 
 \subsection{Реализация и интеграция GoalBounds}
 
