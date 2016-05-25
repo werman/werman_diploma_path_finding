@@ -139,7 +139,24 @@ SFGUI - библиотека работающая совместно с библ
 
 Основным интерфейсом взаимодействия с библиотекой является интерфейс нахождения путей PathFinder<CoordsType> \cref{fig:path_finding_interface}, который имеет метод find с аргументами начальной, конечной точки и типа актёра (его проходимость), а возвращать массив точек представляющих собой найденный маршрут.
 
-\addimg{img/path_finding_interface.png}{0.85}{Интерфейс нахождения путей}{path_finding_interface}
+\begin{figure}[!htb]
+	\centering
+	\captionsetup{justification=centering}
+	\begin{lstlisting}
+template<class CoordsType>
+class PathFinder
+{
+public:
+virtual std::vector<Point<CoordsType>> find( CoordsType startX, 
+					CoordsType startY,
+					CoordsType targetX,
+					CoordsType targetY,
+					uint32_t unitType ) = 0;
+};
+	\end{lstlisting}
+	\caption{Интерфейс нахождения путей}
+	\label{fig:path_finding_interface}
+\end{figure}
 
 Так же предоставляется интерфейс для модификации работы алгоритмов (типа карты, эвристики, Goal Bounding) посредством шаблонов. Из-за того, что количество параметров шаблонов большое, библиотекой предоставляется несколько предзаданных вариантов.
 

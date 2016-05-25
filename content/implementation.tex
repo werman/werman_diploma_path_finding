@@ -8,15 +8,69 @@
 
 Включение и выключение методов в данной работе требуется для работы со знаковы и беззнаковыми целыми типами - для беззнаковых типов не требуется проверка на то, является ли переменная отрицательной, что нужно для проверки находится ли точка в границах карты. Данная проблемы решена двумя макросами  ``PF\_FUN\_ENABLE\_IF\_SIGNED'' и ``PF\_FUN\_ENABLE\_IF\_UNSIGNED'' \cref{fig:enable_fun_macro}.
 
-\addimg{img/enable_fun_macro.png}{1}{Макросы для включения методов}{enable_fun_macro}
+\begin{figure}[!htb]
+	\centering
+	\captionsetup{justification=centering}
+	\begin{lstlisting}
+#define PF_FUN_ENABLE_IF_SIGNED( ValueType, ReturnType ) \
+template<class Q = ValueType> \
+enable_if_t<std::is_integral<Q>::value &&  std::is_signed<Q>::value, ReturnType>
+
+#define PF_FUN_ENABLE_IF_UNSIGNED( ValueType, ReturnType ) \
+template<class Q = ValueType> \
+enable_if_t<std::is_integral<Q>::value &&  std::is_unsigned<Q>::value, ReturnType>
+	\end{lstlisting}
+	\caption{Макросы для включения методов}
+	\label{fig:enable_fun_macro}
+\end{figure}
 
 \subsection{Реализации алгоритма A*}
 
 Алгоритм A* является базовым и наиболее часто используемым алгоритмом для поиска путей. Для работы алгоритм использует открытый и закрытый список. В открытый список добавляется начальная точка, открытый список содержит точки, которые мы уже нашли, но ещё не рассмотрели. После чего пока в открытом списке существуют точки -- выбирается точка с наименьшей стоимостью и рассматриваются её соседи. Если стоимость пути через данную точку до соседа меньше записанной в него стоимости, то стоимость пути до него изменяется и его родитель меняется на текущую клетку \cref{fig:a_star_open_list_add}. После рассмотрения точки - она добавляется в закрытый список. Если открытый список оказался пуст -- значит пути до конечной точки не существует. Если из открытого списка была взята конечная точка - это означает, что путь существует и можно реконструировать его. Для этого мы берём родителя конечной точки и рекурсивно рассматриваем её родителей в массив, пока не дойдём до начальной точки \cref{fig:a_star_reconstruct_path}.
 
-\addimg{img/a_star_open_list_add.png}{1}{Добавление в открытый список в A*}{a_star_open_list_add}
+\begin{figure}[!htb]
+	\centering
+	\captionsetup{justification=centering}
+	\begin{lstlisting}
+NodeInfo& nextNodeInfo = m_nodesInfo[nextNodeIdx];
+if( !nextNodeInfo.IsVisited() || newCost < nextNodeInfo.GetNodeCost())
+{
+	nextNodeInfo.SetVisited( true );
+	nextNodeInfo.SetNodeCost( newCost );
+	nextNodeInfo.SetCameFrom( best.x, best.y );
+	float priority =
+		newCost +
+		Heuritic::nodes_distance( nextX, nextY, targetX, targetY, startX, startY );
+	openList.push( PriorityNode<CoordsType>( nextX, nextY, priority ));
+}
+	\end{lstlisting}
+	\caption{Добавление в открытый список в A*}
+	\label{fig:a_star_open_list_add}
+\end{figure}
 
-\addimg{img/a_star_reconstruct_path.png}{1}{Реконструкция пути}{a_star_reconstruct_path}
+\begin{figure}[!htb]
+	\centering
+	\captionsetup{justification=centering}
+	\begin{lstlisting}
+std::vector<Point<CoordsType>> path;
+auto current = Point<CoordsType>( targetX, targetY );
+path.push_back( current );
+while( !current.Equals( startPoint ))
+{
+	auto nodeIdx = coords_to_contiguous_idx( current.x, current.y, m_map.GetSizeX());
+	const auto& info = m_nodesInfo[nodeIdx];
+	if( current == info.GetCameFrom())
+	{
+		break;
+	}
+	
+	current = info.GetCameFrom();
+	path.push_back( current );
+}
+	\end{lstlisting}
+	\caption{Реконструкция пути}
+	\label{fig:a_star_reconstruct_path}
+\end{figure}
 
 При написании A* для открытого списка была использована очередь с приоритетом std::priority\_queue, а для закрытого списка - вектор имеющий размер карты. Такая реализация закрытого списка дала возможность делать проверку на вхождение в него за константное время. Память для закрытого списка выделяется один раз при создании экземпляра алгоритма поиска и при каждом поиске у всех клеток сбрасывается флаг посещённости.
 
@@ -329,7 +383,30 @@ JPS начинается с того, что из начальной точки 
 	\item идём по всем точкам и расширяем прямоугольник соответствующий направлению в котором точка была достигнута из начальной, что бы прямоугольник включал её. 
 \end{enumerate}
 
-\addimg{img/goal_bounding_fill.png}{1}{Определение ограничивающих прямоугольников}{goal_bounding_fill}
+\begin{figure}[!htb]
+	\centering
+	\captionsetup{justification=centering}
+	\begin{lstlisting}
+auto& bbNode = m_bbMap.GetNodeBB( startX, startY );
+for( uint16_t i = 0; i < map.GetSizeX(); i++ )
+{
+	for( uint16_t j = 0; j < map.GetSizeY(); j++ )
+	{
+		 auto& ffNode = ffMap->GetNode( i, j ); 
+		 if( map.IsPassable( i, j, type ))
+		 {
+			 auto& dirBB = bbNode.boundingBoxes[static_cast<int>(ffNode.originalDir)];	 
+			 dirBB.minX = std::min( dirBB.minX, i );
+			 dirBB.maxX = std::max( dirBB.maxX, i );
+			 dirBB.minY = std::min( dirBB.minY, j );
+			 dirBB.maxY = std::max( dirBB.maxY, j );
+		 }
+	 }
+ }
+	\end{lstlisting}
+	\caption{Определение ограничивающих прямоугольников}
+	\label{fig:goal_bounding_fill}
+\end{figure}
 
 \addimg{img/goal_bounding_dbg.png}{0.8}{Часть карты с раскрашенными в разные цвета ограничивающими прямоугольниками}{goal_bounding_dbg}
 
@@ -339,7 +416,26 @@ JPS начинается с того, что из начальной точки 
 
 Для добавления Goal Bouding в JPS требуется провести аналогичное действие, но для всех функций прыжков.
 
-\addimg{img/a_star_test_goal_bounds.png}{1}{Проверка Goal Bounds}{a_star_test_goal_bounds}
+\begin{figure}[!htb]
+	\centering
+	\captionsetup{justification=centering}
+	\begin{lstlisting}
+for( int i = 0; i < 8; i++ )
+{
+	const auto& delta = coordDeltas[i];
+	const CoordsType nextX = best.x + delta.first;
+	const CoordsType nextY = best.y + delta.second;
+	if( m_map.IsNodeOnMap( nextX, nextY ))
+	{
+		if( TestGoalBounding( best.x, best.y, targetX, targetY, dirs[i] ))
+		{
+			const MapNode& node = m_map.GetNode( nextX, nextY );
+			if( node.IsPassable( unitType ))
+			{
+	\end{lstlisting}
+	\caption{Проверка Goal Bounds}
+	\label{fig:a_star_test_goal_bounds}
+\end{figure}
 
 \subsection{Реализация визуализатора}
 

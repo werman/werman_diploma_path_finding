@@ -33,6 +33,9 @@
 \usepackage{makecell}
 \usepackage{tikz}
 \usepackage{pgfplots}
+\usepackage{courier}
+\usepackage{microtype}
+\usepackage[scaled]{beramono}
 \usepackage{ifthen}
 \usetikzlibrary{shapes,arrows,matrix}
 \usepackage{geometry} % Меняем поля страницы
@@ -165,6 +168,15 @@
 
 \crefformat{figure}{см. рис. #1}
 \crefformat{table}{см. рис. #1}
+
+\newcommand\Small{\fontsize{9}{9.2}\selectfont}
+\newcommand*\LSTfont{\Small\ttfamily\SetTracking{encoding=*}{-60}\lsstyle}
+
+\lstset { 
+	language=C++,
+	basicstyle=\LSTfont,
+	tabsize=2
+}
 
 %%%%% Tikz settings for grids
 
