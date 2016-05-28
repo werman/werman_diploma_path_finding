@@ -141,7 +141,7 @@
 
  
 \DeclareCaptionLabelFormat{gostfigure}{Рисунок #2}
-\DeclareCaptionLabelFormat{gosttable}{Рисунок #2}
+\DeclareCaptionLabelFormat{gosttable}{Таблица #2}
 \DeclareCaptionLabelSeparator{gost}{~---~}
 \captionsetup{labelsep=gost}
 \captionsetup[figure]{labelformat=gostfigure}
@@ -167,8 +167,18 @@
 \end{figure}
 }
 
+\newcommand{\addtable}[3]{
+	\begin{table}[!htb]
+		\centering
+		\captionsetup{justification=centering}
+		\caption{#1}
+		#3	
+		\label{table:#2}
+	\end{table}
+}
+
 \crefformat{figure}{см. рис. #1}
-\crefformat{table}{см. рис. #1}
+\crefformat{table}{см. табл. #1}
 
 \newcommand\Small{\fontsize{9}{9.2}\selectfont}
 \newcommand*\LSTfont{\Small\ttfamily\SetTracking{encoding=*}{-60}\lsstyle}
