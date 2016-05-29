@@ -258,13 +258,13 @@
 \definecolor{grey}{RGB}{200,200,200}
 \definecolor{darkgrey}{RGB}{110,110,110}
 
-\newcommand{\addtikz}[3]{
+\newcommand{\addtikz}[4]{
 	\begin{figure}[!htb]
 		\centering
 		\captionsetup{justification=centering}
 		
-		\begin{tikzpicture}
-		#3
+		\begin{tikzpicture}[scale=#3, every node/.style={scale=#3}]
+		#4
 		\end{tikzpicture}
 		
 		\caption{#1}

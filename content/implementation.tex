@@ -89,7 +89,7 @@ while( !current.Equals( startPoint ))
     \item клетки правее и выше/ниже рассматриваемой могут быть достигнуты оптимальнее из клеток на одну левее;
 \end{enumerate}
 
-\addtikz{Отброшенные клетки сзади}{jps_cells_ignored_behind}
+\addtikz{Отброшенные клетки сзади}{jps_cells_ignored_behind}{1}
 {
 \mybox[x=1,y=0,color=grey]
 \mybox[x=1,y=1,color=grey]
@@ -104,7 +104,7 @@ while( !current.Equals( startPoint ))
 \myarrow[startx=1,starty=1,endx=1,endy=0,color=blue]
 }
 
-\addtikz{Отброшенные клетки сверху и снизу}{jps_cells_ignored_up_down}
+\addtikz{Отброшенные клетки сверху и снизу}{jps_cells_ignored_up_down}{1}
 {
 	\mybox[x=1,y=0,color=grey]
 	\mybox[x=1,y=1,color=grey]
@@ -127,7 +127,7 @@ while( !current.Equals( startPoint ))
 
 Последним допущением является то, что если при прыжке препятствие блокирует продвижение в заданном направлении - весь прыжок может быть отброшен \cref{fig:jps_forward_move_blocked}.
 
-\addtikz{Отброшенные клетки сверху и снизу}{jps_forward_move}
+\addtikz{Отброшенные клетки сверху и снизу}{jps_forward_move}{1}
 {
 	\mybox[x=1,y=0,color=grey]
 	\mybox[x=1,y=1,color=grey]
@@ -158,7 +158,7 @@ while( !current.Equals( startPoint ))
 	\myarrow[startx=3,starty=1,endx=4,endy=1,color=blue]
 }
 
-\addtikz{Вынужденный сосед}{jps_horizontal_forced_neighbour}
+\addtikz{Вынужденный сосед}{jps_horizontal_forced_neighbour}{1}
 {
 	\begin{scope}[]
 		\matrix[column sep=1cm, ampersand replacement=\&]{
@@ -210,7 +210,7 @@ while( !current.Equals( startPoint ))
 	\end{scope}
 }
 
-\addtikz{Заблокированный путь}{jps_forward_move_blocked}
+\addtikz{Заблокированный путь}{jps_forward_move_blocked}{1}
 {
 	\mybox[x=1,y=0,color=grey]
 	\mybox[x=1,y=1,color=grey]
@@ -244,7 +244,7 @@ while( !current.Equals( startPoint ))
 
 Такие же правила и допущения верны для диагональных прыжков. Рассмотрим прыжок вправо вверх по диагонали, можно предположить, что клетки снизу, снизу справа, слева и слева сверху можно оптимально достичь через родителя рассматриваемой клетки. В следствии  чего остаётся рассмотреть три клетки: сверху, справа и по диагонали \cref{fig:jps_diagonal_jump}. В отличии от горизонтального и вертикального прыжка в данном случае осталось три клетки для рассмотрения, однако для двух из них требуется вертикальный и горизонтальный прыжок. Так как требуемые прыжки уже определены - вначале происходят они, затем если в результате прыжков не было найдено клеток для дальнейшего рассмотрения - происходит прыжок по диагонали на одну клетку и процесс повторяется.
 
-\addtikz{Прыжок по диагонали}{jps_diagonal_jump}
+\addtikz{Прыжок по диагонали}{jps_diagonal_jump}{1}
 {
 	\mybox[x=1,y=1,color=grey]
 	\mybox[x=1,y=2,color=grey]
@@ -268,7 +268,7 @@ while( !current.Equals( startPoint ))
 
 По аналогии с горизонтальным и вертикальным прыжком при диагональном прыжке так же встречаются вынужденные соседи, когда слева или под текущей клеткой находится препятствие, клетка слева вверху или справа внизу соответственно являются вынужденными соседями \cref{fig:jps_diagonal_jump_forced_neighbour}. 
 
-\addtikz{Вынужденный сосед при диагональном прыжке}{jps_diagonal_jump_forced_neighbour}
+\addtikz{Вынужденный сосед при диагональном прыжке}{jps_diagonal_jump_forced_neighbour}{1}
 {
 	\begin{scope}[]
 		\matrix[column sep=1cm, ampersand replacement=\&]{
@@ -323,7 +323,7 @@ JPS начинается с того, что из начальной точки 
 
 Диагональный прыжок происходит пока следующая клетка проходима, не является конечной клеткой и находится на карте. Пусть текущая клетка имеет координаты ${(x_c, y_c)}$, а направлением прыжка является пара дельт ${(d_x, d_y)}$ принимающих значения ${d_x, d_y \in \{-1, 0, 1\}}$. Сперва рассматривается соседняя клетка ${(x_c, y_c+d_y)}$ и если она проходима и соседняя  ${(x_c-d_x, y_c)}$ не проходима, а клетка с координатами ${(x_c-d_x, y_c+d_y)}$ проходима (путь не заблокирован \cref{fig:jps_diagonal_jump_blocked_forced_neighbour}), то текущая клетка проверяется на возможность добавления в открытый список. Такая же проверка происходит с тройкой точек ${\{(x_c+d_x), (x_c, y_c-d_y), (x_c+d_x, y_c-d_y)\}}$ соответственно. Если прыжок вперёд заблокирован двумя клетками по горизонтали и вертикали ${\{(x_c, y_c+d_y), (x_c+d_x, y_c)\}}$ \cref{fig:jps_blocked_diagonal_jump}, то прыжок прекращается, иначе проводится горизонтальный и вертикальный прыжок и если хотя бы один из них нашёл клетку для дальнейшего рассмотрения, то текущая клетка добавляется в открытый список, при этом такие прыжки в стороны не добавляют клетки в открытый список.
   
-\addtikz{Заблокированный вынужденный сосед}{jps_diagonal_jump_blocked_forced_neighbour}
+\addtikz{Заблокированный вынужденный сосед}{jps_diagonal_jump_blocked_forced_neighbour}{1}
 {
 	\mybox[x=1,y=1,color=grey]
 	\mybox[x=1,y=2,color=grey]
@@ -345,7 +345,7 @@ JPS начинается с того, что из начальной точки 
 	\myarrow[startx=2,starty=2,endx=3,endy=3,color=blue]
 }
   
-\addtikz{Заблокированный прыжок по диагонали}{jps_blocked_diagonal_jump}
+\addtikz{Заблокированный прыжок по диагонали}{jps_blocked_diagonal_jump}{1}
 {
 	\mybox[x=1,y=1,color=grey]
 	\mybox[x=1,y=2,color=grey]
