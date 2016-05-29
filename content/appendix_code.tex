@@ -1,0 +1,151 @@
+\section*{Приложение Б \\
+	Примеры программного кода }
+\addcontentsline{toc}{section}{Приложение Б Примеры программного кода}
+
+\lstset { 
+	language=C++,
+	basicstyle=\normalsize\ttfamily,
+	tabsize=1,
+	breakatwhitespace=true,
+	breaklines=true,
+	lineskip={-1.5pt}
+}
+
+\begin{lstlisting}
+for( int i = 0; i < 8; i++ )
+{
+	const auto& delta = coordDeltas[i];
+	const CoordsType nextX = best.x + delta.first;
+	const CoordsType nextY = best.y + delta.second;
+	if( m_map.IsNodeOnMap( nextX, nextY ))
+	{
+		if( TestGoalBounding( best.x, best.y, targetX, targetY, dirs[i] ))
+		{
+			const MapNode& node = m_map.GetNode( nextX, nextY );
+			if( node.IsPassable( unitType ))
+			{
+				float newCost = 0;
+				if( i >= 4 )
+				{
+					if( !m_map.IsPassable( nextX - delta.first, nextY, unitType ) &&
+					!m_map.IsPassable( nextX, nextY - delta.second, unitType ))
+					{
+						continue;
+					}
+					
+					newCost = currentCost + node.GetWeight() * std::sqrt( 2 );
+				}
+				else
+				{
+					newCost = currentCost + node.GetWeight();
+				}		
+				const auto nextNodeIdx = coords_to_contiguous_idx( nextX, nextY, m_map.GetSizeX());
+				NodeInfo& nextNodeInfo = m_nodesInfo[nextNodeIdx];
+				
+				if( !nextNodeInfo.IsVisited() || newCost < nextNodeInfo.GetNodeCost())
+				{
+					nextNodeInfo.SetVisited( true );
+					nextNodeInfo.SetNodeCost( newCost );
+					nextNodeInfo.SetCameFrom( best.x, best.y );
+					float priority =
+					newCost +
+					Heuritic::nodes_distance( nextX, nextY, targetX, targetY, startX, startY );
+					
+					openList.push( PriorityNode<CoordsType>( nextX, nextY, priority ));
+				}
+			}
+		}
+	}
+}
+
+\end{lstlisting}
+\begin{lstlisting}
+void checkAndAddJumpPoint( CoordsType currentX, CoordsType currentY, CoordsType nextX, CoordsType nextY,
+	short dx, short dy )
+{
+	const auto jumpNodeIdx = coords_to_contiguous_idx( nextX, nextY, m_map.GetSizeX());
+	NodeInfo& jumpNodeInfo = m_closedNodes[jumpNodeIdx];
+	
+	static const auto MIN_COST_DELTA = 0.01f;
+	
+	const auto prevNodeIdx = coords_to_contiguous_idx( currentX, currentY, m_map.GetSizeX());
+	NodeInfo& prevNodeInfo = m_closedNodes[prevNodeIdx];
+	auto cost = prevNodeInfo.GetNodeCost() +
+	StraightDistance::nodes_distance<CoordsType>( currentX, currentY, nextX, nextY, 0, 0 );
+	
+	if( jumpNodeInfo.GetNodeCost() < 0 || ( cost + MIN_COST_DELTA ) < jumpNodeInfo.GetNodeCost())
+	{
+		jumpNodeInfo.SetNodeCost( cost );
+		jumpNodeInfo.SetCameFrom( currentX, currentY );
+		
+		uint32_t priority =
+		cost +
+		Heuritic::nodes_distance( nextX, nextY, m_targetX, m_targetY,
+		m_startX, m_startY );
+		
+		m_openList.push( JPSPriorityNode<CoordsType>( nextX, nextY, priority, dx, dy ));
+	}
+}
+\end{lstlisting}
+
+\vspace{1\baselineskip}
+
+\begin{lstlisting}
+bool horizontalJump( CoordsType currentX, CoordsType currentY, 
+					short dx, bool addJumpPoint )
+{
+	CoordsType nextX = currentX + dx;	
+	bool result = false;
+		
+	if( !m_map.IsPassableXSafe( nextX, currentY, m_unitType ))
+	{
+		return false;
+	}	
+	if( nextX == m_targetX && currentY == m_targetY )
+	{
+		if( addJumpPoint )
+		{
+			checkAndAddJumpPoint( currentX, currentY, nextX, currentY, 0, 0 );
+		}
+		return true;
+	}	
+	if( !TestGoalBounding( currentX, currentY, m_targetX, m_targetY,
+	dx > 0 ? GoalBounding::Direction::RIGHT : GoalBounding::Direction::LEFT ))
+	{
+		return false;
+	}
+	
+	uint32_t testForcedPrev = ~( m_map.IsPassableYSafe( nextX, currentY + 1, m_unitType ) |
+	(( m_map.IsPassableYSafe( nextX, currentY - 1, m_unitType )) << 1 ));
+	
+	nextX += dx;
+	while( nextX < m_map.GetSizeX())
+	{
+		if( !m_map.IsPassableXSafe( nextX, currentY, m_unitType ))
+		{
+			return false;
+		}
+		
+		AddDbgLine( nextX - 2 * dx, currentY, nextX - dx, currentY );
+		
+		uint32_t testForcedCurrent = ( m_map.IsPassableYSafe( nextX, currentY + 1, m_unitType ) |
+		(( m_map.IsPassableYSafe( nextX, currentY - 1, m_unitType )) << 1 ));
+				
+		auto forcedPos = testForcedPrev & testForcedCurrent;    // 1 or 2, where 1 - down and 2 up
+		if( forcedPos || ( nextX == m_targetX && currentY == m_targetY ))
+		{
+			if( addJumpPoint )
+			{
+				short dy = forcedPos == 1 ? 1 : -1;
+				checkAndAddJumpPoint( currentX, currentY, nextX - dx, currentY, dx, dy );
+			}
+			return true;
+		}
+		testForcedPrev = ~testForcedCurrent;
+		nextX += dx;
+	}
+	return false;
+}
+\end{lstlisting}
+
+\addcontentsline{toc}{section}{Приложение В CD с электронными материалами выпускной работы}
