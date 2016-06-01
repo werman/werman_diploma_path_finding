@@ -179,6 +179,15 @@
 \crefformat{figure}{см. рис. #1}
 \crefformat{table}{см. табл. #1}
 
+\newcommand{\addpdfimg}[3]{
+	\begin{figure}[!htb]
+		\centering
+		\captionsetup{justification=centering}
+		\includegraphics[page=#2]{#1}
+		\caption{#3}
+	\end{figure}
+}
+
 \newcommand\Small{\fontsize{9}{9.2}\selectfont}
 \newcommand*\LSTfont{\Small\ttfamily}
 
