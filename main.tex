@@ -34,10 +34,9 @@
 \usepackage{tikz}
 \usepackage{pgfplots}
 \usepackage{courier}
-\usepackage{microtype}
-\usepackage[scaled]{beramono}
 \usepackage{ifthen}
 \usepackage{varwidth}
+
 \usetikzlibrary{shapes,arrows,matrix}
 \usepackage{geometry} % Меняем поля страницы
 \geometry{left=2.5cm}% левое поле
@@ -181,7 +180,7 @@
 \crefformat{table}{см. табл. #1}
 
 \newcommand\Small{\fontsize{9}{9.2}\selectfont}
-\newcommand*\LSTfont{\Small\ttfamily\SetTracking{encoding=*}{-60}\lsstyle}
+\newcommand*\LSTfont{\Small\ttfamily}
 
 \lstset { 
 	language=C++,
