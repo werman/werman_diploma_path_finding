@@ -1,6 +1,6 @@
 \section[Описание программной реализации]{\MakeTextUppercase{ОПИСАНИЕ ПРОГРАММНОЙ РЕАЛИЗАЦИИ}}
 
-\vspace{1\baselineskip} 
+\subsection{Вспомогательные функции}
 
 При реализации библиотеки и визуализатора возникли задачи не связанные с реализацией самих алгоритмов, такие как: корректное измерение времени работы алгоритмов и включение отдельных методов в зависимости от типа с которым работает они работают.
 
@@ -12,15 +12,11 @@
 	\centering
 	\captionsetup{justification=centering}
 	\begin{lstlisting}
-#define PF_FUN_ENABLE_IF_SIGNED( ValueType, ReturnType ) \
-template<class Q = ValueType> \
-enable_if_t<std::is_integral<Q>::value &&  std::is_signed<Q>::value, ReturnType>
-
 #define PF_FUN_ENABLE_IF_UNSIGNED( ValueType, ReturnType ) \
 template<class Q = ValueType> \
 enable_if_t<std::is_integral<Q>::value &&  std::is_unsigned<Q>::value, ReturnType>
 	\end{lstlisting}
-	\caption{Макросы для включения методов}
+	\caption{Макрос для включения метода}
 	\label{fig:enable_fun_macro}
 \end{figure}
 
